@@ -1,0 +1,47 @@
+/* Query 1 */ Top Artists with highest music sale
+SELECT ar.ArtistId, ar.name, SUM(il.UnitPrice*il.Quantity) as most_sale
+FROM Artist ar
+JOIN Album a
+ON ar.ArtistId= a.ArtistId
+JOIN Track t
+ON a.AlbumId=t.AlbumId
+JOIN InvoiceLine il
+ON t.TrackId= il.TrackId
+GROUP BY 1,2
+ORDER BY 3 DESC
+LIMIT 10;
+
+/* Query 2 */ How many albums the top Artist made?
+
+SELECT ar.ArtistId, ar.name, count(a.AlbumId) as total_album
+FROM Album a
+JOIN  Artist ar
+ON ar.ArtistId= a.ArtistId
+GROUP BY ar.ArtistId
+order by count(a.AlbumId)  desc;
+
+
+/* Query 3 */ Country spend the most on the music
+
+SELECT  c.Country, sum(i.total) as total
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId= i.CustomerId
+GROUP BY 1
+order by sum(i.total)  desc;
+
+/* Query 4 */ Which country has spent the most on Latin Music?
+
+SELECT g.name, c.Country, SUM(il.UnitPrice*il.Quantity) as total
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId= i.CustomerId
+JOIN InvoiceLine il
+ON il.InvoiceId= i.InvoiceId
+JOIN  track t
+ON t.TrackId= il.TrackId
+JOIN Genre g
+ON g.GenreId= t.GenreId
+WHERE g.name='Latin'
+GROUP BY 1,2
+ORDER BY 3 DESC;
